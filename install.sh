@@ -12,11 +12,13 @@
 #
 
 export DROGOM_HOME=`pwd`
+rm -rf "env.config"
+echo "home " $DROGOM_HOME >> env.config
 
-echo $DROGOM_HOME
 echo -e "\nInstalling SGA..."
 cd $DROGOM_HOME/lib
 tar xvzf sga.tar.gz
+echo "sga " $DROGOM_HOME"/lib/sga" >> $DROGOM_HOME/env.config
 
 echo -e "\n\nInstalling SPAdes..."
 cd $DROGOM_HOME/lib
@@ -25,26 +27,32 @@ if [ -d SPAdes.tar.gz ]; then
 fi
 tar xvzf SPAdes.tar.gz
 [ $? -ne 0 ] && exit $?
+echo "spades " $DROGOM_HOME"/lib/SPAdes/bin/spades.py"  >> $DROGOM_HOME/env.config
 
 echo -e "\n\nInstalling BWA..."
 cd $DROGOM_HOME/lib
 tar xvzf bwa.tar.gz
+echo "bwa " $DROGOM_HOME"/lib/bwa"  >> $DROGOM_HOME/env.config
 
 echo -e "\n\nInstalling CDHIT..."
 cd $DROGOM_HOME/lib
 tar xvzf cd-hit-est.tar.gz
+echo "cdhit " $DROGOM_HOME"/lib/cd-hit-est"  >> $DROGOM_HOME/env.config
 
 echo -e "\n\nInstalling CMPress..."
 cd $DROGOM_HOME/lib
 tar xvzf cmpress.tar.gz
+echo "cmpress " $DROGOM_HOME"/lib/cmpress"  >> $DROGOM_HOME/env.config
 
 echo -e "\n\nInstalling CMSearch..."
 cd $DROGOM_HOME/lib
 tar xvzf cmsearch.tar.gz
+echo "cmsearch " $DROGOM_HOME"/lib/cmsearch"  >> $DROGOM_HOME/env.config
 
 echo -e "\n\nInstalling Samtools..."
 cd $DROGOM_HOME/lib
 tar xvzf samtools.tar.gz
+echo "samtools " $DROGOM_HOME"/lib/samtools"  >> $DROGOM_HOME/env.config
 
 echo -e "\nCompleted installing all third-party tools."
 echo -e "\n----------------------------------------------\n"
@@ -56,6 +64,7 @@ fi
 cd $DROGOM_HOME/src
 make clean
 make
+echo "grarna " $DROGOM_HOME"/bin/dragom.exe"  >> $DROGOM_HOME/env.config
 
 cd $DROGOM_HOME
 echo -e "\n-----------------------------------------------\n"
