@@ -39,9 +39,9 @@ Note:
 
 To use other version of any third party software listed in DRAGoM/lib:
 
-  1, replace the corresponding path to the executable in "env.config" and,
+  1. replace the corresponding path to the executable in "env.config" and,
   
-  2, delete the line starting with "sanity" in "env.config".
+  2. delete the line starting with "sanity" in "env.config".
 
 ==============================================
 # Running the program:
@@ -53,25 +53,16 @@ USAGE: ./runDragom.py [options]
 
 
 Input  options:
--1   <filename>    : fastq file with forward paired-end reads
-    
--2   <filename>    : fastq file with reverse paired-end reads
-    
-                   only use -1 <filename> means that input reads are interleaved paired-end reads
-                   
--s   <filename>    : fastq file with single-end reads
-    
-                   if both pair-end or single-end input are provided, the single-end input will be ignored
-                   
--p   <filename>    : parameter file
-    
--m   <int>         : [optional] maximum extension length for anchors [default: 100]
-    
--d                 : [optional] anchor masking flag [use this to disable anchor masking]
-
--k                 : [optional] keep and gzip all intermediate files [use this to keep files]
-
--h                 : print help message
+          -1   <filename>    : fastq file with forward paired-end reads
+          -2   <filename>    : fastq file with reverse paired-end reads   
+                             only use -1 <filename> means that input reads are interleaved paired-end reads             
+          -s   <filename>    : fastq file with single-end reads 
+                             if both pair-end or single-end input are provided, the single-end input will be ignored               
+          -p   <filename>    : parameter file
+          -m   <int>         : [optional] maximum extension length for anchors [default: 100]
+          -d                 : [optional] anchor masking flag [use this to disable anchor masking]
+          -k                 : [optional] keep and gzip all intermediate files [use this to keep files]
+          -h                 : print help message
 
 
 
