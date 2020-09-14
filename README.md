@@ -49,6 +49,7 @@ Input  options:
 -p   <filename>    : parameter file
 -m   <int>         : [optional] maximum extension length for anchors [default: 100]
 -d                 : [optional] anchor masking flag [use this to disable anchor masking]
+-k                 : [optional] keep and gzip all intermediate files [use this to keep files]
 -h                 : print help message
 
 
