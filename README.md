@@ -28,14 +28,19 @@ The output of DRAGoM includes:
 To install DRAGoM, please follow the steps below:
 
 1. Untar the downloaded file "DRAGoM.tar.gz". This will generate the directory "DRAGoM".
+
     $ tar xzvf DRAGoM.tar.gz
 
 2. Install DRAGoM by running the "install.sh" script.
+
     $ bash install.sh
 
 Note:
+
 To use other version of any third party software listed in DRAGoM/lib:
+
   1, replace the corresponding path to the executable in "env.config" and,
+  
   2, delete the line starting with "sanity" in "env.config".
 
 ==============================================
@@ -43,37 +48,59 @@ To use other version of any third party software listed in DRAGoM/lib:
 
 1.  The runDragom.py wrapper is used to run the DRAGoM.
 
+
 USAGE: ./runDragom.py [options]
+
 
 Input  options:
 -1   <filename>    : fastq file with forward paired-end reads
+    
 -2   <filename>    : fastq file with reverse paired-end reads
+    
                    only use -1 <filename> means that input reads are interleaved paired-end reads
+                   
 -s   <filename>    : fastq file with single-end reads
+    
                    if both pair-end or single-end input are provided, the single-end input will be ignored
+                   
 -p   <filename>    : parameter file
+    
 -m   <int>         : [optional] maximum extension length for anchors [default: 100]
+    
 -d                 : [optional] anchor masking flag [use this to disable anchor masking]
+
 -k                 : [optional] keep and gzip all intermediate files [use this to keep files]
+
 -h                 : print help message
+
 
 
 Note:
 1,The parameter file specifies the parameters used for running all programs including in DRAGoM;
+
 2,The parameter file must contain the path to input CM files;
+
 3,You must provide at least one cm file to run the program;
+
 4,Don't change the parameters if you don't understand what it means.
+
 
 ==============================================
 # Example:
 An example of simulated pair-end reads file is provided in the ~/example/ directory.
+
 You can use the example to test the installation using:
-$ cd ~/example/
-$ python2 ../runDragom.py -1 example.read1.fq -2 example.read2.fq -p example.config
+
+  $ cd ~/example/
+  
+  $ python2 ../runDragom.py -1 example.read1.fq -2 example.read2.fq -p example.config
+
 
 Note:
+
 1, you might need to unzip the example file using:
-$ tar -xvf example.tar.gz
+
+  $ tar -xvf example.tar.gz
 
 ==============================================
 # Output:
