@@ -53,27 +53,27 @@ USAGE: ./runDragom.py [options]
 
 
 Input  options:
-          -1   <filename>    : fastq file with forward paired-end reads
-          -2   <filename>    : fastq file with reverse paired-end reads   
-                             only use -1 <filename> means that input reads are interleaved paired-end reads             
-          -s   <filename>    : fastq file with single-end reads 
-                             if both pair-end or single-end input are provided, the single-end input will be ignored               
-          -p   <filename>    : parameter file
-          -m   <int>         : [optional] maximum extension length for anchors [default: 100]
-          -d                 : [optional] anchor masking flag [use this to disable anchor masking]
-          -k                 : [optional] keep and gzip all intermediate files [use this to keep files]
-          -h                 : print help message
+-1   <filename>    : fastq file with forward paired-end reads
+-2   <filename>    : fastq file with reverse paired-end reads   
+                   only use -1 <filename> means that input reads are interleaved paired-end reads             
+-s   <filename>    : fastq file with single-end reads 
+                   if both pair-end or single-end input are provided, the single-end input will be ignored               
+-p   <filename>    : parameter file
+-m   <int>         : [optional] maximum extension length for anchors [default: 100]
+-d                 : [optional] anchor masking flag [use this to disable anchor masking]
+-k                 : [optional] keep and gzip all intermediate files [use this to keep files]
+-h                 : print help message
 
 
 
 Note:
-1,The parameter file specifies the parameters used for running all programs including in DRAGoM;
+1.The parameter file specifies the parameters used for running all programs including in DRAGoM;
 
-2,The parameter file must contain the path to input CM files;
+2.The parameter file must contain the path to input CM files;
 
-3,You must provide at least one cm file to run the program;
+3.You must provide at least one cm file to run the program;
 
-4,Don't change the parameters if you don't understand what it means.
+4.Don't change the parameters if you don't understand what it means.
 
 
 ==============================================
@@ -104,7 +104,7 @@ acc,predicted reads,name
 RF00002,11,5_8S_rRNA
 RF00010,21,RNaseP_bact_a
 
-2, RF00010.assembled_rna.fa, this file listed all homologs of RF00010:
+2. RF00010.assembled_rna.fa, this file listed all homologs of RF00010:
 E.g.
 >24,39,1,100,7,67,100_0_166_5.8e-28_RF00010
 TGGATGATAGATGGAGGAGAGGAAAGTCCGGGCTCCACAGGGCAGGGTGCCAGATAACGTGTGGGGGGTGAAAGCCCACGACCAGTGCAACAGAGAGCAA
@@ -123,7 +123,7 @@ test_203_341_0:0:0_1:0:0_16/1,6.7e-98
 test_114_297_2:0:0_0:0:0_9/1,6.7e-98
 test_114_297_2:0:0_0:0:0_9/2,6.7e-98
 
-4, RF00002.assembled_rna.fa, this file listed all homologs of RF00002:
+4. RF00002.assembled_rna.fa, this file listed all homologs of RF00002:
 E.g.
 >4,33,1,100,11,53,100,43,92,100,49,105,100_123_204_6e-11_RF00002
 GACTCTCGGCAACGGATATCTTGCTCTCGCATCGATGAAGAACGTAGCGAAATGCGATACTTGGTGTGAATTGCAAGATCC
