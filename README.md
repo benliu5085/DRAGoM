@@ -33,6 +33,11 @@ To install DRAGoM, please follow the steps below:
 2. Install DRAGoM by running the "install.sh" script.
     $ bash install.sh
 
+Note:
+To use other version of any third party software listed in DRAGoM/lib:
+  1, replace the corresponding path to the executable in "env.config" and,
+  2, delete the line starting with "sanity" in "env.config".
+
 ==============================================
 # Running the program:
 
