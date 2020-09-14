@@ -356,29 +356,77 @@ def usage():
     print(" -p   <filename>    : parameter file\n")
     print(" -m   <int>         : [optional] maximum extension length for anchors [default: 100] \n")
     print(" -d                 : [optional] anchor masking flag [use this to disable anchor masking] \n")
+    print(" -k                 : [optional] keep and gzip all intermediate files [use this to keep files] \n")
     print(" -h                 : print help message\n")
 
+def sanity_check():
+    checkpoint = ["Program: sga", "SPAdes genome assembler", "Program: bwa", "CD-HIT version", "Usage: cmpress", "Usage: cmsearch", "Program: samtools", "Program: DRAGoM"]
+    ans = True
+    for (it, prog) in enumerate([SGA, SPADES, BWA, CDHIT, CMPRESS, CMSEARCH, SAMTOOL, GRARNA]):
+        ff_checked = False
+        cmd = prog + " &> temp"
+        subprocess.call(cmd, shell=True)
+        with open('temp','r') as fin:
+            for line in fin:
+                if line.find(checkpoint[it]) >= 0:
+                    ff_checked = True
+
+        if not ff_checked:
+            print("[ERROR]: " + prog + " is not properly installed!")
+            ans = False
+
+    return ans
 
 """ find all dependency """
 home_dir = os.path.join(os.getcwd(), sys.argv[0][0:-12])
-CMPRESS  = home_dir + "lib/cmpress "
-CMSEARCH = home_dir + "lib/cmsearch "
-GRARNA   = home_dir + "bin/dragom.exe "
-BWA      = home_dir + "lib/bwa "
-CDHIT    = home_dir + "lib/cd-hit-est "
-SAMTOOL  = home_dir + "lib/samtools "
-SGA      = home_dir + "lib/sga "
-SPADES   = home_dir + "lib/SPAdes/bin/spades.py "
+SGA      = ""
+SPADES   = ""
+BWA      = ""
+CDHIT    = ""
+CMPRESS  = ""
+CMSEARCH = ""
+SAMTOOL  = ""
+GRARNA   = ""
+FF_sanity = False
+with open(home_dir+"/env.config") as fin:
+    for line in fin:
+        cont = line.strip().split()
+        if len(cont) > 0:
+            if cont[0] == "sga":
+                SGA             = cont[1]
+            if cont[0] == "spades":
+                SPADES          = cont[1]
+            if cont[0] == "bwa":
+                BWA             = cont[1]
+            if cont[0] == "cdhit":
+                CDHIT           = cont[1]
+            if cont[0] == "cmpress":
+                CMPRESS         = cont[1]
+            if cont[0] == "cmsearch":
+                CMSEARCH        = cont[1]
+            if cont[0] == "samtools":
+                SAMTOOL        = cont[1]
+            if cont[0] == "grarna":
+                GRARNA        = cont[1]
+            if cont[0] == "sanity":
+                if cont[1] == "1":
+                    FF_sanity = True
+
+if not FF_sanity:
+    if sanity_check():
+        cmd = "echo \"sanity 1\" >> " + home_dir+"/env.config"
+        subprocess.call(cmd, shell=True)
 """ ---------------------- """
 
 """ load parameters """
 try:
-    opts, args = getopt.getopt(sys.argv[1:], '1:2:s:m:p:dhH', ["help"])
+    opts, args = getopt.getopt(sys.argv[1:], '1:2:s:m:p:dhHk', ["help"])
 except getopt.GetoptError as err:
         print str(err)
         usage()
         exit()
 
+FF_KEEP  = False
 READ1 = ""
 READ2 = ""
 READS = ""
@@ -399,6 +447,8 @@ for o, a in opts:
         MAX_EXTEND_LENGTH = a
     elif o in ("-d"):
         AGGRESSIVE = False
+    elif o in ("-k"):
+        FF_KEEP = True
     else:
         usage()
         exit()
@@ -438,11 +488,9 @@ cm_l = []
 with open(CONFIG, 'r') as fin:
     for line in fin:
         if line[0] != "#":
-
             cont = line.strip().split()
             if len(cont) > 0:
                 if cont[0] == "CPU":
-
                     CPU = cont[1]
                 if cont[0] == "SGA_CORRECR_K":
                     SGA_CORRECR_K = cont[1]
@@ -658,6 +706,14 @@ fout_log.write("\n\n\n==================================")
 fout_log.write("\nThanks for using DRAGoM!\n")
 
 # clean intermeidate files
+if FF_KEEP:
+    cmd = "tar -cvf sga.tar.gz reads.pp* "
+    subprocess.call(cmd, shell=True)
+    cmd = "tar -cvf spades.tar.gz  spades/"
+    subprocess.call(cmd, shell=True)
+    cmd = "tar -cvf dragom.tar.gz og.fq og.sam og.merge* cut.og.merge* "
+    subprocess.call(cmd, shell=True)
+
 cmd = "rm -f reads.pp* "
 subprocess.call(cmd, shell=True)
 cmd = "rm -rf spades/"
