@@ -56,8 +56,8 @@ echo "samtools " $DROGOM_HOME"/lib/samtools"  >> $DROGOM_HOME/env.config
 
 echo -e "\nCompleted installing all third-party tools."
 echo -e "\n----------------------------------------------\n"
-## IMPP installation
-echo -e "\nInstalling iMPP ..."
+## DROGOM installation
+echo -e "\nInstalling DROGOM ..."
 if [ ! -e $DROGOM_HOME/bin ]; then
         mkdir $DROGOM_HOME/bin
 fi
