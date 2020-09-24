@@ -22,11 +22,7 @@ echo "sga " $DROGOM_HOME"/lib/sga" >> $DROGOM_HOME/env.config
 
 echo -e "\n\nInstalling SPAdes..."
 cd $DROGOM_HOME/lib
-if [ -d SPAdes.tar.gz ]; then
-        rm -rf SPAdes.tar.gz
-fi
 tar xvzf SPAdes.tar.gz
-[ $? -ne 0 ] && exit $?
 echo "spades " $DROGOM_HOME"/lib/SPAdes/bin/spades.py"  >> $DROGOM_HOME/env.config
 
 echo -e "\n\nInstalling BWA..."
