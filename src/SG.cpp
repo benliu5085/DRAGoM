@@ -223,12 +223,14 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
   {
     std::string line;
     std::string name;
+    int cnt = 0;
     while(std::getline(fin, line))
     {
       if(line[0]=='>')
       {
         name = line.substr(1);
-        contigs_id[name] = contigs_id.size()-1;
+        contigs_id[name] = cnt;
+        cnt ++;
       }
       else
       {
