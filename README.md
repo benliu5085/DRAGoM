@@ -6,14 +6,17 @@
 # Description:
 
 DRAGoM is a tool designed to predict and assemble ncRNA from next generation sequencing data.
-DRAGoM is written in C++ and has been tested on a 64-bit Linux system.
+DRAGoM is written in C++ and has been tested on a 64-bit Linux system, Red hat (7) and Ubuntu (20.04 LTS).
+If you have any troubles when using DRAGoM, feel free to contact Ben Liu (ben_0522@ku.edu) or Cuncong Zhong (cczhong@ku.edu).
+
 The input for DRAGoM includes:
-1, raw reads, pair-end or single-end, trim if necessary;
-2, CM files of interested ncRNA from Rfam(https://rfam.xfam.org)
+1. raw reads, pair-end or single-end, trim if necessary;
+2. CM files of interested ncRNA from Rfam(https://rfam.xfam.org)
+
 The output of DRAGoM includes:
-1, summary.csv: which summarized the read counts for each ncRNA family;
-2, predicted reads for each ncRNA family in seperate file;
-3, assembled ncRNA homologs for each ncRNA family in seperate file;
+1. summary.csv: which summarized the read counts for each ncRNA family;
+2. predicted reads for each ncRNA family in seperate file;
+3. assembled ncRNA homologs for each ncRNA family in seperate file;
 
 ==============================================
 # Prerequisites:
@@ -22,76 +25,73 @@ The output of DRAGoM includes:
 2. boost-1.54.0 or newer
 3. python2.7
 
+# Third-party software:
+1. sga (https://github.com/jts/sga)
+2. SPAdes (https://cab.spbu.ru/software/spades/)
+3. bwa (http://bio-bwa.sourceforge.net)
+4. infernal (http://eddylab.org/infernal/)
+5. cd-hit (http://weizhongli-lab.org/cd-hit/)
+6. samtools (http://www.htslib.org)
+
+Note:
+1. You must install the prerequisites to successfully run DRAGoM.
+2. We provided one set of pre-built binary of all third-party softwares with DRAGoM.
+   If you prefer to use another version of any third-party software, remember to update the env.config file.
+3. We have tested the softwares on Red hat ( > 7 ) and Ubuntu ( > 18.04 ), if you are going to use DRAGoM on
+   other OS, you might need to install the third-party softwares on your own.
+
 ==============================================
 # Installation:
 
 To install DRAGoM, please follow the steps below:
 
 1. Untar the downloaded file "DRAGoM.tar.gz". This will generate the directory "DRAGoM".
-
     $ tar xzvf DRAGoM.tar.gz
 
 2. Install DRAGoM by running the "install.sh" script.
-
-    $ bash install.sh
+    $ ./install.sh
 
 Note:
-
-To use other version of any third party software listed in DRAGoM/lib:
-
-  1. replace the corresponding path to the executable in "env.config" and,
-  
-  2. delete the line starting with "sanity" in "env.config".
+1. An 'env.config' file will be created automatically after runninng 'install.sh', which contains
+   the absolute directory to all executable of all third-party softwares. If you want to use another
+   version, update the corresponding directory to the executable you want DRAGoM to use.
+2. The 'cmsearch' and 'cmpress' are included in the software infernal.
 
 ==============================================
 # Running the program:
 
 1.  The runDragom.py wrapper is used to run the DRAGoM.
 
-
 USAGE: ./runDragom.py [options]
-
 
 Input  options:
 -1   <filename>    : fastq file with forward paired-end reads
--2   <filename>    : fastq file with reverse paired-end reads   
-                   only use -1 <filename> means that input reads are interleaved paired-end reads             
--s   <filename>    : fastq file with single-end reads 
-                   if both pair-end or single-end input are provided, the single-end input will be ignored               
+-2   <filename>    : fastq file with reverse paired-end reads
+                   only use -1 <filename> means that input reads are interleaved paired-end reads
+-s   <filename>    : fastq file with single-end reads
+                   if both pair-end or single-end input are provided, the single-end input will be ignored
 -p   <filename>    : parameter file
 -m   <int>         : [optional] maximum extension length for anchors [default: 100]
 -d                 : [optional] anchor masking flag [use this to disable anchor masking]
--k                 : [optional] keep and gzip all intermediate files [use this to keep files]
 -h                 : print help message
 
 
-
 Note:
-1.The parameter file specifies the parameters used for running all programs including in DRAGoM;
-
-2.The parameter file must contain the path to input CM files;
-
-3.You must provide at least one cm file to run the program;
-
-4.Don't change the parameters if you don't understand what it means.
-
+1. The parameter file specifies the parameters used for running all programs including in DRAGoM;
+2. The parameter file must contain the path to input CM files;
+3. You must provide at least one cm file to run the program;
+4. Don't change the parameters if you don't understand what it means.
 
 ==============================================
 # Example:
 An example of simulated pair-end reads file is provided in the ~/example/ directory.
-
 You can use the example to test the installation using:
-
-  $ cd ~/example/
-  
-  $ python2 ../runDragom.py -1 example.read1.fq -2 example.read2.fq -p example.config
-
+$ cd ~/example/
+$ python2 ../runDragom.py -1 example.read1.fq -2 example.read2.fq -p example.config
 
 Note:
-
-1, you might need to unzip the example file using:
-
-  $ tar -xvf example.tar.gz
+you might need to unzip the example file using:
+$ tar -xvf example.tar.gz
 
 ==============================================
 # Output:
