@@ -51,20 +51,24 @@ echo "cmsearch " $DROGOM_HOME"/lib/cmsearch"  >> $DROGOM_HOME/env.config
 
 echo -e "\n\nInstalling Samtools..."
 cd $DROGOM_HOME/lib
-tar xvzf samtools.tar.gz
+if test `cat /etc/os-release | grep -c 'Ubuntu'` -gt 0 ; then
+  tar xvzf samtools_ubuntu.gz.tar
+elif test `cat /etc/os-release | grep -c 'Red Hat'` -gt 0; then
+  tar xvzf samtools_redhat.tar.gz
+fi
 echo "samtools " $DROGOM_HOME"/lib/samtools"  >> $DROGOM_HOME/env.config
 
 echo -e "\nCompleted installing all third-party tools."
 echo -e "\n----------------------------------------------\n"
-## DROGOM installation
-echo -e "\nInstalling DROGOM ..."
+## DRAGoM installation
+echo -e "\nInstalling DRAGoM ..."
 if [ ! -e $DROGOM_HOME/bin ]; then
         mkdir $DROGOM_HOME/bin
 fi
 cd $DROGOM_HOME/src
 make clean
 make
-echo "grarna " $DROGOM_HOME"/bin/dragom.exe"  >> $DROGOM_HOME/env.config
+echo "dragom " $DROGOM_HOME"/bin/dragom.exe"  >> $DROGOM_HOME/env.config
 
 cd $DROGOM_HOME
 echo -e "\n-----------------------------------------------\n"
