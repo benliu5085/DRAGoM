@@ -364,7 +364,8 @@ def sanity_check():
     ans = True
     for (it, prog) in enumerate([SGA, SPADES, BWA, CDHIT, CMPRESS, CMSEARCH, SAMTOOL, GRARNA]):
         ff_checked = False
-        cmd = prog + " &> temp"
+        # cmd = prog + " &> temp"
+        cmd = "test -e " + prog + " && echo " + checkpoint[it] + " > temp"
         subprocess.call(cmd, shell=True)
         with open('temp','r') as fin:
             for line in fin:
@@ -374,7 +375,7 @@ def sanity_check():
         if not ff_checked:
             print("[ERROR]: " + prog + " is not properly installed!")
             ans = False
-
+    subprocess.call("rm -rf temp", shell=True)
     return ans
 
 """ find all dependency """
@@ -387,7 +388,6 @@ CMPRESS  = ""
 CMSEARCH = ""
 SAMTOOL  = ""
 GRARNA   = ""
-FF_sanity = False
 with open(home_dir+"/env.config") as fin:
     for line in fin:
         cont = line.strip().split()
@@ -406,16 +406,11 @@ with open(home_dir+"/env.config") as fin:
                 CMSEARCH        = cont[1]
             if cont[0] == "samtools":
                 SAMTOOL        = cont[1]
-            if cont[0] == "grarna":
+            if cont[0] == "dragom":
                 GRARNA        = cont[1]
-            if cont[0] == "sanity":
-                if cont[1] == "1":
-                    FF_sanity = True
 
-if not FF_sanity:
-    if sanity_check():
-        cmd = "echo \"sanity 1\" >> " + home_dir+"/env.config"
-        subprocess.call(cmd, shell=True)
+if not sanity_check():
+    exit()
 """ ---------------------- """
 
 """ load parameters """
