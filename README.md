@@ -7,6 +7,7 @@
 
 DRAGoM is a tool designed to predict and assemble ncRNA from next generation sequencing data.
 DRAGoM is written in C++ and has been tested on a 64-bit Linux system, Red hat (7) and Ubuntu (20.04 LTS).
+DRAGoM is freely available under the Creative Commons BY-NC-ND 4.0 License Agreement (https://creativecommons.org/licenses/by-nc-nd/4.0/).
 If you have any troubles when using DRAGoM, feel free to contact Ben Liu (ben_0522@ku.edu) or Cuncong Zhong (cczhong@ku.edu).
 
 The input for DRAGoM includes:
