@@ -365,12 +365,14 @@ def sanity_check():
     for (it, prog) in enumerate([SGA, SPADES, BWA, CDHIT, CMPRESS, CMSEARCH, SAMTOOL, GRARNA]):
         ff_checked = False
         # cmd = prog + " &> temp"
-        cmd = "test -e " + prog + " && echo " + checkpoint[it] + " > temp"
-        subprocess.call(cmd, shell=True)
-        with open('temp','r') as fin:
-            for line in fin:
-                if line.find(checkpoint[it]) >= 0:
-                    ff_checked = True
+        cmd = "test -e " + prog
+        rc = subprocess.call(cmd, shell=True)
+        if rc == 0:
+            ff_checked = True
+        # with open('temp','r') as fin:
+        #     for line in fin:
+        #         if line.find(checkpoint[it]) >= 0:
+        #             ff_checked = True
 
         if not ff_checked:
             print("[ERROR]: " + prog + " is not properly installed!")
@@ -474,10 +476,10 @@ CPU = ""
 SGA_CORRECR_K = ""
 SGA_CORRECR_Learn = ""
 SGA_CORRECR_d = ""
-SGA_OVERLAP_M = ""
+SGA_OVERLAP_M = "30"
 
-SPADES_META = ""
-SPADES_M = ""
+SPADES_META = "--meta"
+SPADES_M = "1"
 
 cm_l = []
 with open(CONFIG, 'r') as fin:
@@ -503,14 +505,17 @@ with open(CONFIG, 'r') as fin:
 
                 if cont[0] == "in_cm":
                     cm_l.append(cont[1])
+
+if len(cm_l) == 0:
+    print("[ERROR]: NO cm provided in config file!\n\n\n")
+    exit()
 """ ---------------------- """
 
 fout_log = open("Dragom.run.log", 'w')
 """ stage 1: build graph """
 
-fout_log.write("========== Welcome to DRAGoM ==========\n\n\n")
+fout_log.write("========== Welcome to DRAGoM ==========\n\n")
 fout_log.write("========== stage 1: building graph ==========\n")
-fout_log.write("========== stage 1a: building sga graph ==========\n")
 
 time_begin = time.time()
 fout_log.write("========== stage 1a: building sga graph ==========\n")
@@ -523,32 +528,59 @@ elif read_state == FF_SINGLE_END:
     cmd = SGA + " preprocess -o reads.pp.fastq --pe-mode 0 " + READS
 fout_log.write("Command line:\n    "+cmd+"\n")
 subprocess.call(cmd, shell=True)
+rc = subprocess.call("test -e reads.pp.fastq", shell=True)
+if rc != 0:
+    fout_log.write("[ERROR]: Failed, check the file name of input read(s)\n")
+    exit()
 
 # ec
 cmd = SGA + " index --no-reverse -t " + CPU + " reads.pp.fastq"
 fout_log.write("Command line:\n    "+cmd+"\n")
 subprocess.call(cmd, shell=True)
+rc = subprocess.call("test -e reads.pp.sai", shell=True)
+if rc != 0:
+    fout_log.write("[ERROR]: Failed to index the input reads!\n")
+    exit()
 
 cmd = SGA + " correct -k " + SGA_CORRECR_K + " -d " + SGA_CORRECR_d + " " + SGA_CORRECR_Learn + " -t " + CPU + " reads.pp.fastq"
 fout_log.write("Command line:\n    "+cmd+"\n")
 subprocess.call(cmd, shell=True)
+rc = subprocess.call("test -e reads.pp.ec.fa", shell=True)
+if rc != 0:
+    fout_log.write("[ERROR]: Failed to perform error-correction!\n")
+    exit()
 
 # rmdup
 cmd = SGA + " index -t " + CPU + " reads.pp.ec.fa"
 fout_log.write("Command line:\n    "+cmd+"\n")
 subprocess.call(cmd, shell=True)
+rc = subprocess.call("test -e reads.pp.ec.sai", shell=True)
+if rc != 0:
+    fout_log.write("[ERROR]: Failed to index corrected reads!\n")
+    exit()
+
 
 cmd = SGA + " rmdup -t " + CPU + " reads.pp.ec.fa"
 fout_log.write("Command line:\n    "+cmd+"\n")
 subprocess.call(cmd, shell=True)
+rc = subprocess.call("test -e reads.pp.ec.rmdup.fa", shell=True)
+if rc != 0:
+    fout_log.write("[ERROR]: Failed to remove duplicated reads!\n")
+    exit()
+
 
 # overlap
 cmd = SGA + " overlap -t " + CPU + " -m " + SGA_OVERLAP_M + " reads.pp.ec.rmdup.fa"
 fout_log.write("Command line:\n    "+cmd+"\n")
 subprocess.call(cmd, shell=True)
+rc = subprocess.call("test -e reads.pp.ec.rmdup.asqg.gz", shell=True)
+if rc != 0:
+    fout_log.write("[ERROR]: Failed to overlap the reads!\n")
+    exit()
 
 time_end   = time.time()
-fout_log.write("\n\n\nIt takes " + str(time_end - time_begin) + " s to build sga graph!\n\n")
+fout_log.write("\nSGA finished!\n")
+fout_log.write("It takes " + str(time_end - time_begin) + " s to build sga graph!\n\n")
 
 fout_log.write("========== stage 1b: building SPAdes graph ==========\n")
 time_begin = time.time()
@@ -561,9 +593,15 @@ elif read_state == FF_SINGLE_END:
     cmd = SPADES + " " + SPADES_META + " -t " + CPU + " -m " + SPADES_M + " -s " + READS + " -o spades"
 fout_log.write("Command line:\n    "+cmd+"\n")
 subprocess.call(cmd, shell=True)
+rc = subprocess.call("test -e spades/contigs.fasta", shell=True)
+if rc != 0:
+    fout_log.write("[ERROR]: Failed to run SPAdes!\n")
+    exit()
+
 
 time_end   = time.time()
-fout_log.write("\n\n\nIt takes " + str(time_end - time_begin) + " s to build SPAdes graph!\n\n")
+fout_log.write("\nSPAdes finished!\n")
+fout_log.write("It takes " + str(time_end - time_begin) + " s to build SPAdes graph!\n\n")
 
 
 fout_log.write("========== stage 1c: merging graph ==========\n")
@@ -591,8 +629,14 @@ cmd = GRARNA + " mergeSG og.fq og.sam spades/contigs.fasta"
 fout_log.write("Command line:\n    "+cmd+"\n")
 subprocess.call(cmd, shell=True)
 string_graph = "og.merged.fq"
+rc = subprocess.call("test -e og.merged.fq", shell=True)
+if rc != 0:
+    fout_log.write("[ERROR]: Failed to build the hybrid graph!\n")
+    exit()
+
 time_end   = time.time()
-fout_log.write("\n\n\nIt takes " + str(time_end - time_begin) + " s to build Hybrid graph!\n\n")
+fout_log.write("\nSucceed to build the hybrid graph!\n")
+fout_log.write("It takes " + str(time_end - time_begin) + " s to build Hybrid graph!\n\n")
 
 fout_log.write("========== stage 2: finding anchors ==========\n")
 time_begin = time.time()
@@ -616,9 +660,15 @@ for cm in cm_l:
     cmd = CMSEARCH + " --rfam -Z 5000000 -T " + str(bit_score) + " --nohmmonly --cpu " + CPU + " --tblout " + tblout + ' ' + cm + ' ' + string_graph
     fout_log.write("Command line:\n    "+cmd+"\n")
     subprocess.call(cmd, shell=True)
+    rc = subprocess.call("test -e " + tblout, shell=True)
+    if rc != 0:
+        fout_log.write("[ERROR]: Failed to find anchor for " + acc + "!\n")
+        cm_l.remove(cm)
+
 
 time_end   = time.time()
-fout_log.write("\n\n\nIt takes " + str(time_end - time_begin) + " s to find anchors!\n\n")
+fout_log.write("\nSucceed to find anchors!\n")
+fout_log.write("It takes " + str(time_end - time_begin) + " s to find anchors!\n\n")
 
 fout_log.write("========== stage 3: extend anchors ==========\n")
 time_begin = time.time()
@@ -630,11 +680,17 @@ fout_log.write("Command line:\n    "+cmd+"\n")
 subprocess.call(cmd, shell=True)
 
 for cm in cm_l:
+    acc = cm[cm.rfind('/')+1 : cm.rfind('.')]
     path = string_graph[:string_graph.rfind('.')+1] + acc + ".path.fa"
-    compress(path, CPU)
+    rc = subprocess.call("test -e " + path, shell=True)
+    if rc != 0:
+        fout_log.write("[ERROR]: Failed to extend path for " + acc + "!\n")
+    else:
+        compress(path, CPU)
 
 time_end   = time.time()
-fout_log.write("\n\n\nIt takes " + str(time_end - time_begin) + " s to extend anchors!\n\n")
+fout_log.write("\nSucceed to extend anchors!\n")
+fout_log.write("It takes " + str(time_end - time_begin) + " s to extend anchors!\n\n")
 
 fout_log.write("========== stage 4: predicting ==========\n")
 time_begin = time.time()
@@ -673,7 +729,10 @@ for cm in cm_l:
     compress(cpath, CPU)
 
     sam = mapping(cpath)
-    if sam != "":
+    rc = subprocess.call("test -e " + sam, shell=True)
+    if rc != 0:
+        fout_log.write("[ERROR]: Failed to identify reads for " + acc + "!\n")
+    else:
         this_pred = predictSAM(sam, readname_l)
 
     with open(acc+".prediction.csv",'w') as fout:
@@ -696,31 +755,32 @@ for cm in cm_l:
     subprocess.call(cmd, shell=True)
 
 time_end   = time.time()
-fout_log.write("\n\n\nIt takes " + str(time_end - time_begin) + " s to predict!\n\n")
-fout_log.write("\n\n\n==================================")
-fout_log.write("\nThanks for using DRAGoM!\n")
+fout_log.write("\nSucceed to detect ncRNA reads!\n")
+fout_log.write("It takes " + str(time_end - time_begin) + " s to detect!\n")
+fout_log.write("\n==================================\n")
+fout_log.write("Thanks for using DRAGoM!\n")
 
-# clean intermeidate files
-if FF_KEEP:
-    cmd = "tar -cvf sga.tar.gz reads.pp* "
-    subprocess.call(cmd, shell=True)
-    cmd = "tar -cvf spades.tar.gz  spades/"
-    subprocess.call(cmd, shell=True)
-    cmd = "tar -cvf dragom.tar.gz og.fq og.sam og.merge* cut.og.merge* "
-    subprocess.call(cmd, shell=True)
-
-cmd = "rm -f reads.pp* "
-subprocess.call(cmd, shell=True)
-cmd = "rm -rf spades/"
-subprocess.call(cmd, shell=True)
-cmd = "rm -f og.fq og.sam"
-subprocess.call(cmd, shell=True)
-cmd = "rm -f og.merge* "
-subprocess.call(cmd, shell=True)
-cmd = "rm -f cut.og.merge* "
-subprocess.call(cmd, shell=True)
-cmd = "rm -f " + reads + " " + namemap
-subprocess.call(cmd, shell=True)
+# # clean intermeidate files
+# if FF_KEEP:
+#     cmd = "tar -cvf sga.tar.gz reads.pp* "
+#     subprocess.call(cmd, shell=True)
+#     cmd = "tar -cvf spades.tar.gz  spades/"
+#     subprocess.call(cmd, shell=True)
+#     cmd = "tar -cvf dragom.tar.gz og.fq og.sam og.merge* cut.og.merge* "
+#     subprocess.call(cmd, shell=True)
+#
+# cmd = "rm -f reads.pp* "
+# subprocess.call(cmd, shell=True)
+# cmd = "rm -rf spades/"
+# subprocess.call(cmd, shell=True)
+# cmd = "rm -f og.fq og.sam"
+# subprocess.call(cmd, shell=True)
+# cmd = "rm -f og.merge* "
+# subprocess.call(cmd, shell=True)
+# cmd = "rm -f cut.og.merge* "
+# subprocess.call(cmd, shell=True)
+# cmd = "rm -f " + reads + " " + namemap
+# subprocess.call(cmd, shell=True)
 
 """ ---------------------- """
 
