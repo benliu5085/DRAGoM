@@ -760,27 +760,27 @@ fout_log.write("It takes " + str(time_end - time_begin) + " s to detect!\n")
 fout_log.write("\n==================================\n")
 fout_log.write("Thanks for using DRAGoM!\n")
 
-# # clean intermeidate files
-# if FF_KEEP:
-#     cmd = "tar -cvf sga.tar.gz reads.pp* "
-#     subprocess.call(cmd, shell=True)
-#     cmd = "tar -cvf spades.tar.gz  spades/"
-#     subprocess.call(cmd, shell=True)
-#     cmd = "tar -cvf dragom.tar.gz og.fq og.sam og.merge* cut.og.merge* "
-#     subprocess.call(cmd, shell=True)
-#
-# cmd = "rm -f reads.pp* "
-# subprocess.call(cmd, shell=True)
-# cmd = "rm -rf spades/"
-# subprocess.call(cmd, shell=True)
-# cmd = "rm -f og.fq og.sam"
-# subprocess.call(cmd, shell=True)
-# cmd = "rm -f og.merge* "
-# subprocess.call(cmd, shell=True)
-# cmd = "rm -f cut.og.merge* "
-# subprocess.call(cmd, shell=True)
-# cmd = "rm -f " + reads + " " + namemap
-# subprocess.call(cmd, shell=True)
+# clean intermeidate files
+if FF_KEEP:
+    cmd = "tar -cvf sga.tar.gz reads.pp* "
+    subprocess.call(cmd, shell=True)
+    cmd = "tar -cvf spades.tar.gz  spades/"
+    subprocess.call(cmd, shell=True)
+    cmd = "tar -cvf dragom.tar.gz og.fq og.sam og.merge* cut.og.merge* "
+    subprocess.call(cmd, shell=True)
+
+cmd = "rm -f reads.pp* "
+subprocess.call(cmd, shell=True)
+cmd = "rm -rf spades/"
+subprocess.call(cmd, shell=True)
+cmd = "rm -f og.fq og.sam"
+subprocess.call(cmd, shell=True)
+cmd = "rm -f og.merge* "
+subprocess.call(cmd, shell=True)
+cmd = "rm -f cut.og.merge* "
+subprocess.call(cmd, shell=True)
+cmd = "rm -f " + reads + " " + namemap
+subprocess.call(cmd, shell=True)
 
 """ ---------------------- """
 
