@@ -757,6 +757,11 @@ for cm in cm_l:
 time_end   = time.time()
 fout_log.write("\nSucceed to detect ncRNA reads!\n")
 fout_log.write("It takes " + str(time_end - time_begin) + " s to detect!\n")
+fout_log.write("\n==================================\n\n")
+fout_log.write("Outputs:\n")
+fout_log.write("* Summary of predicted reads for all ncRNAs is in summary.csv\n")
+fout_log.write("* Lists of predicted reads for each ncRNA family are in ~.prediction.csv, (eg: RF00002.prediction.csv)\n")
+fout_log.write("* Lists of aligned ncRNA sequences for each ncRNA family are in ~.assembled_rna.fa, (eg: RF00002.assembled_rna.fa)\n")
 fout_log.write("\n==================================\n")
 fout_log.write("Thanks for using DRAGoM!\n")
 
