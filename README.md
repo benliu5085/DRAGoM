@@ -50,7 +50,7 @@ To install DRAGoM, please follow the steps below:
     $ tar xzvf DRAGoM.tar.gz
 
 2. Install DRAGoM by running the "install.sh" script.
-    $ ./install.sh
+    $ bash install.sh
 
 Note:
 1. An 'env.config' file will be created automatically after runninng 'install.sh', which contains
@@ -63,7 +63,7 @@ Note:
 
 1.  The runDragom.py wrapper is used to run the DRAGoM.
 
-USAGE: ./runDragom.py [options]
+USAGE: python runDragom.py [options]
 
 Input  options:
 -1   <filename>    : fastq file with forward paired-end reads
@@ -88,7 +88,7 @@ Note:
 An example of simulated pair-end reads file is provided in the ~/example/ directory.
 You can use the example to test the installation using:
 $ cd ~/example/
-$ python2 ../runDragom.py -1 example.read1.fq -2 example.read2.fq -p example.config
+$ python ../runDragom.py -1 example.read1.fq -2 example.read2.fq -p example.config
 
 Note:
 you might need to unzip the example file using:
