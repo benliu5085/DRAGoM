@@ -28,6 +28,9 @@ The output of DRAGoM includes:
 4. make ( >= 3.82)
 5. cmake ( >= 3.12)
 
+Note:
+We assume the boost library is installed using package manager to default directory (/usr/include/boost). If you installed boost library at other directory, please update the ~/DRAGoM/src/CMakeLists.txt "set(Boost_INCLUDE_DIR /usr/include)" into "set(Boost_INCLUDE_DIR WHERE/BOOST/IS)", WHERE/BOOST/IS is the directory where you installed boost library.
+
 # Third-party software:
 1. sga (https://github.com/jts/sga)
 2. SPAdes (https://cab.spbu.ru/software/spades/)
