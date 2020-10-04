@@ -22,7 +22,7 @@ The output of DRAGoM includes:
 ==============================================
 # Prerequisites:
 
-1. gcc compiler ( >= 4.8.5)
+1. g++ compiler ( >= 4.8.5)
 2. boost ( >= 1.53)
 3. python 2.7
 4. make ( >= 3.82)
