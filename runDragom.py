@@ -354,6 +354,8 @@ def usage():
     print(" -s   <filename>    : fastq file with single-end reads\n")
     print("                      if both pair-end or single-end input are provided, the single-end input will be ignored\n")
     print(" -p   <filename>    : parameter file\n")
+    print(" -A   <filename>    : assembled contig in fasta format, with this option, all assembly operation will be ignored,\n")
+    print("                    : and read will be predicted from the contig.\n")
     print(" -m   <int>         : [optional] maximum extension length for anchors [default: 100] \n")
     print(" -d                 : [optional] anchor masking flag [use this to disable anchor masking] \n")
     print(" -k                 : [optional] keep and gzip all intermediate files [use this to keep files] \n")
@@ -771,7 +773,7 @@ if FF_KEEP:
     subprocess.call(cmd, shell=True)
     cmd = "tar -cvf spades.tar.gz  spades/"
     subprocess.call(cmd, shell=True)
-    cmd = "tar -cvf dragom.tar.gz og.fq og.sam og.merge* cut.og.merge* "
+    cmd = "tar -cvf dragom.tar.gz og.fq og.sam og.merge*fq "
     subprocess.call(cmd, shell=True)
 
 cmd = "rm -f reads.pp* "
