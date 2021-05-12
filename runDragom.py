@@ -592,7 +592,7 @@ if read_state == FF_PAIR_END_1:
 elif read_state == FF_PAIR_END_2:
     cmd = SPADES + " " + SPADES_META + " -t " + CPU + " -m " + SPADES_M + " -1 " + READ1 + " -2 " + READ2 + " -o spades"
 elif read_state == FF_SINGLE_END:
-    cmd = SPADES + " " + SPADES_META + " -t " + CPU + " -m " + SPADES_M + " -s " + READS + " -o spades"
+    cmd = SPADES + " " + " -t " + CPU + " -m " + SPADES_M + " -s " + READS + " -o spades"
 fout_log.write("Command line:\n    "+cmd+"\n")
 subprocess.call(cmd, shell=True)
 rc = subprocess.call("test -e spades/contigs.fasta", shell=True)
